@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigInteger;
@@ -26,8 +27,9 @@ public class TransactionController {
 	private TransactionService transactionService;
 
 	@GetMapping("/")
-	public ResponseEntity<List<Transaction>> getTransaction() {
-		return new ResponseEntity<List<Transaction>>(transactionService.getTransactions(), HttpStatus.OK);
+	public ResponseEntity<List<Transaction>> getTransaction(@RequestParam(defaultValue = "0") int index,
+			@RequestParam(defaultValue = "4") int limit) {
+		return new ResponseEntity<List<Transaction>>(transactionService.getTransactions(index, limit), HttpStatus.OK);
 	}
 
 	@PostMapping("/")

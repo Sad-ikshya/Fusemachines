@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fuse.financeManagement.models.User;
@@ -26,8 +27,10 @@ public class UserController {
 	private UserService userService;
 
 	@GetMapping("/")
-	public ResponseEntity<List<User>> getUsers() {
-		return new ResponseEntity<List<User>>(userService.getUsers(), HttpStatus.OK);
+	public ResponseEntity<List<User>> getUsers(@RequestParam(defaultValue = "0") int index,
+			@RequestParam(defaultValue = "4") int limit) {
+
+		return new ResponseEntity<List<User>>(userService.getUsers(index, limit), HttpStatus.OK);
 
 	}
 

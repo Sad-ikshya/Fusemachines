@@ -9,7 +9,7 @@ import com.fuse.financeManagement.models.Transaction;
 
 @Service
 public interface TransactionService {
-	public List<Transaction> getTransactions();
+	public List<Transaction> getTransactions(int index, int dataLimit);
 
 	public Transaction createTransaction(Transaction transaction);
 

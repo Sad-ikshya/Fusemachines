@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fuse.financeManagement.models.Account;
+import com.fuse.financeManagement.models.AccountType;
 import com.fuse.financeManagement.services.AccountService;
 
 @RestController
@@ -27,9 +29,10 @@ public class AccountController {
 	private AccountService accountService;
 
 	@GetMapping("/")
-	public ResponseEntity<List<Account>> getAccountHolders() {
+	public ResponseEntity<List<Account>> getAccountHolders(@RequestParam(defaultValue = "0") int index,
+			@RequestParam(defaultValue = "4") int limit) {
 
-		return new ResponseEntity<List<Account>>(accountService.getAccountHolders(), HttpStatus.OK);
+		return new ResponseEntity<List<Account>>(accountService.getAccountHolders(index, limit), HttpStatus.OK);
 	}
 
 	@PostMapping("/")
@@ -57,5 +60,21 @@ public class AccountController {
 	@GetMapping("/get")
 	public ResponseEntity<HttpStatus> Test() throws HttpMessageNotReadableException {
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+	}
+
+	@GetMapping("/searchByMinMax")
+	public ResponseEntity<List<Account>> getByMinMax(@RequestParam double minBalance, double maxBalance) {
+		return new ResponseEntity<List<Account>>(accountService.getFilteredData(minBalance, maxBalance), HttpStatus.OK);
+	}
+
+	@GetMapping("/searchByMin")
+	public ResponseEntity<List<Account>> getByMin(@RequestParam double minBalance) {
+		return new ResponseEntity<List<Account>>(accountService.getFilteredData(minBalance), HttpStatus.OK);
+	}
+
+	@GetMapping("/searchByAccountType")
+	public ResponseEntity<List<Account>> getByAccountType(@RequestParam AccountType type) {
+		return new ResponseEntity<List<Account>>(accountService.getFilteredData(type), HttpStatus.OK);
+
 	}
 }

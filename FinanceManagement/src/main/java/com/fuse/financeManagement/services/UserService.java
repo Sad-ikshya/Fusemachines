@@ -9,7 +9,7 @@ import com.fuse.financeManagement.models.User;
 
 @Service
 public interface UserService {
-	public List<User> getUsers();
+	public List<User> getUsers(int index, int dataLimit);
 
 	public User createUser(User user);
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fuse.financeManagement.models.Transaction;
 import com.fuse.financeManagement.services.TransactionService;
+import com.fuse.financeManagement.utils.ListManipulator;
 
 @Service
 public class TransactionServiceImpmentation implements TransactionService {
@@ -19,8 +20,9 @@ public class TransactionServiceImpmentation implements TransactionService {
 	}
 
 	@Override
-	public List<Transaction> getTransactions() {
-		return transactions;
+	public List<Transaction> getTransactions(int index, int pageLimit) {
+		ListManipulator<Transaction> manipulator = new ListManipulator<Transaction>();
+		return manipulator.getLimitedData(transactions, index, pageLimit);
 	}
 
 	@Override

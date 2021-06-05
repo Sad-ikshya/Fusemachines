@@ -2,6 +2,7 @@ package com.fuse.financeManagement.implementations;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fuse.financeManagement.exceptionHandling.UserNotFoundException;
 import com.fuse.financeManagement.models.User;
 import com.fuse.financeManagement.services.UserService;
+import com.fuse.financeManagement.utils.ListManipulator;
 
 @Service
 public class UserServiceImplemenation implements UserService {
@@ -19,8 +21,11 @@ public class UserServiceImplemenation implements UserService {
 	}
 
 	@Override
-	public List<User> getUsers() {
-		return users;
+	public List<User> getUsers(int index, int pageLimit) {
+		ListManipulator<User> manipulator = new ListManipulator<User>();
+		List<User> subData = manipulator.getLimitedData(users, index, pageLimit);
+		Collections.sort(subData, User.UserFullNameComparator);
+		return subData;
 	}
 
 	@Override

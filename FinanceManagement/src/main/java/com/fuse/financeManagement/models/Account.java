@@ -4,11 +4,10 @@ import java.math.BigInteger;
 
 public class Account {
 	private BigInteger id;
+	private BigInteger userId;
 	private BigInteger accountNumber;
 	private AccountType type;
-	private String fullName;
-	private String address;
-	private BigInteger phoneNumber;
+	private double balance;
 
 	public BigInteger getId() {
 		return id;
@@ -16,6 +15,14 @@ public class Account {
 
 	public void setId(BigInteger id) {
 		this.id = id;
+	}
+
+	public BigInteger getUserId() {
+		return userId;
+	}
+
+	public void setUserId(BigInteger userId) {
+		this.userId = userId;
 	}
 
 	public BigInteger getAccountNumber() {
@@ -26,36 +33,20 @@ public class Account {
 		this.accountNumber = accountNumber;
 	}
 
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public BigInteger getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(BigInteger phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
 	public AccountType getType() {
 		return type;
 	}
 
 	public void setType(AccountType type) {
 		this.type = type;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 
 }
