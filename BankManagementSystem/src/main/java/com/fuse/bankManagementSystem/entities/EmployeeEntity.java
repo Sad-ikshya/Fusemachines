@@ -19,14 +19,16 @@ import lombok.ToString;
 @Setter
 @Document
 @Builder
-public class UserEntity {
+public class EmployeeEntity {
 	@Id
-	public String id;
-	public String firstName;
-	public String middleName;
-	public String lastName;
-	public Gender gender;
-	public String address;
-	public BigInteger phoneNumber;
-	public String email;
+	private String id;
+	private String firstName;
+	private String middleName;
+	private String lastName;
+	private BigInteger phoneNumber;
+	private String address;
+	private Post post;
+	private double salary;
+	private String email;
+
 }

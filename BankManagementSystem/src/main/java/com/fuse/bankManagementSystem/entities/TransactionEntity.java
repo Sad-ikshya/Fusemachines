@@ -1,8 +1,10 @@
 package com.fuse.bankManagementSystem.entities;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -19,14 +21,12 @@ import lombok.ToString;
 @Setter
 @Document
 @Builder
-public class UserEntity {
+public class TransactionEntity {
 	@Id
 	public String id;
-	public String firstName;
-	public String middleName;
-	public String lastName;
-	public Gender gender;
-	public String address;
-	public BigInteger phoneNumber;
-	public String email;
+	public Date date;
+	public double ammount;
+	public BigInteger fromAccount;
+	@DBRef
+	public AccountEntity toAccount;
 }
