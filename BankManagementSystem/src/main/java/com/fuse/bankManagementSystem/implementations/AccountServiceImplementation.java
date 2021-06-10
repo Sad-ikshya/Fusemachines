@@ -4,10 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.fuse.bankManagementSystem.dtos.AccountDto;
 import com.fuse.bankManagementSystem.dtos.UserDto;
+import com.fuse.bankManagementSystem.entities.AccounType;
 import com.fuse.bankManagementSystem.entities.AccountEntity;
 import com.fuse.bankManagementSystem.entities.UserEntity;
 import com.fuse.bankManagementSystem.repositories.AccountRepository;
@@ -19,8 +25,9 @@ public class AccountServiceImplementation implements AccountService {
 	AccountRepository accountRepository;
 
 	@Override
-	public List<AccountDto> getAllAccounts() {
-		List<AccountEntity> account = accountRepository.findAll();
+	public Page<AccountDto> getAllAccounts(int page, int size, String sortBY) {
+		Pageable pageRequest = PageRequest.of(page, size, Sort.by(sortBY));
+		Page<AccountEntity> account = accountRepository.findAll(pageRequest);
 		List<AccountDto> accountDtoList = new ArrayList<>();
 		for (AccountEntity a : account) {
 			UserDto user = UserDto.builder().id(a.user.getId()).build();
@@ -29,7 +36,8 @@ public class AccountServiceImplementation implements AccountService {
 
 			accountDtoList.add(accountDto);
 		}
-		return accountDtoList;
+		Page<AccountDto> pagedData = new PageImpl<>(accountDtoList);
+		return pagedData;
 
 	}
 
@@ -82,4 +90,21 @@ public class AccountServiceImplementation implements AccountService {
 		}
 		return accountDtoList;
 	}
+
+	@Override
+	public Page<AccountDto> getByAccountType(AccounType accountType, int page, int size, String sortBy) {
+		Pageable pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
+		Page<AccountEntity> account = accountRepository.findByAccountType(accountType, pageRequest);
+		List<AccountDto> accountDtoList = new ArrayList<>();
+		for (AccountEntity a : account) {
+			UserDto user = UserDto.builder().id(a.user.getId()).build();
+			AccountDto accountDto = AccountDto.builder().id(a.getId()).user(user).accounType(a.getAccounType())
+					.accountNumber(a.getAccountNumber()).balance(a.getBalance()).build();
+
+			accountDtoList.add(accountDto);
+		}
+		Page<AccountDto> pagedData = new PageImpl<>(accountDtoList);
+		return pagedData;
+	}
+
 }

@@ -1,8 +1,10 @@
 package com.fuse.bankManagementSystem.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fuse.bankManagementSystem.dtos.AccountDto;
+import com.fuse.bankManagementSystem.entities.AccounType;
 import com.fuse.bankManagementSystem.services.AccountService;
+import com.fuse.bankManagementSystem.utility.Response;
 
 @RestController
 @RequestMapping("/accounts")
@@ -24,8 +29,17 @@ public class AccountController {
 	private AccountService accountService;
 
 	@GetMapping("/")
-	public ResponseEntity<List<AccountDto>> getAllAccount() {
-		return new ResponseEntity<List<AccountDto>>(accountService.getAllAccounts(), HttpStatus.OK);
+	public ResponseEntity<Map<String, Object>> getAllAccount(@RequestParam(defaultValue = "") String accountType,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size,
+			@RequestParam(defaultValue = "id") String sortBy) {
+		Response<AccountDto> response = new Response<AccountDto>();
+		if (!accountType.isEmpty()) {
+			Page<AccountDto> pagedData = accountService.getByAccountType(AccounType.valueOf(accountType), page, size,
+					sortBy);
+			return response.getPageResponseEntity(pagedData, HttpStatus.OK);
+
+		}
+		return response.getPageResponseEntity(accountService.getAllAccounts(page, size, sortBy), HttpStatus.OK);
 	}
 
 	@PostMapping("/")
