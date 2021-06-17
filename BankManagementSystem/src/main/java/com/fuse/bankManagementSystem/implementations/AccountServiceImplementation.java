@@ -12,58 +12,69 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.fuse.bankManagementSystem.dtos.AccountDto;
-import com.fuse.bankManagementSystem.dtos.UserDto;
-import com.fuse.bankManagementSystem.entities.AccounType;
+import com.fuse.bankManagementSystem.dtos.AccountResponseDto;
+import com.fuse.bankManagementSystem.dtos.TransactionResponseDto;
 import com.fuse.bankManagementSystem.entities.AccountEntity;
-import com.fuse.bankManagementSystem.entities.UserEntity;
+import com.fuse.bankManagementSystem.entities.AccountTypes;
 import com.fuse.bankManagementSystem.repositories.AccountRepository;
 import com.fuse.bankManagementSystem.services.AccountService;
+import com.fuse.bankManagementSystem.services.TransactionService;
 
 @Service
 public class AccountServiceImplementation implements AccountService {
 	@Autowired
 	AccountRepository accountRepository;
 
+	@Autowired
+	TransactionService transactionService;
+
 	@Override
-	public Page<AccountDto> getAllAccounts(int page, int size, String sortBY) {
+	public Page<AccountResponseDto> getAllAccounts(int page, int size, String sortBY) {
 		Pageable pageRequest = PageRequest.of(page, size, Sort.by(sortBY));
 		Page<AccountEntity> account = accountRepository.findAll(pageRequest);
-		List<AccountDto> accountDtoList = new ArrayList<>();
+		List<AccountResponseDto> accountDtoList = new ArrayList<>();
 		for (AccountEntity a : account) {
-			UserDto user = UserDto.builder().id(a.user.getId()).build();
-			AccountDto accountDto = AccountDto.builder().id(a.getId()).user(user).accounType(a.getAccounType())
-					.accountNumber(a.getAccountNumber()).balance(a.getBalance()).build();
+			List<TransactionResponseDto> transactions = new ArrayList<>();
+			for (String id : a.getTransactions()) {
+				TransactionResponseDto transaction = transactionService.getTransactionById(id);
+				transactions.add(transaction);
+			}
+			AccountResponseDto accountDto = AccountResponseDto.builder().id(a.getId()).accounType(a.getAccounType())
+					.accountNumber(a.getAccountNumber()).balance(a.getBalance()).transactions(transactions).build();
 
 			accountDtoList.add(accountDto);
 		}
-		Page<AccountDto> pagedData = new PageImpl<>(accountDtoList);
+		Page<AccountResponseDto> pagedData = new PageImpl<>(accountDtoList);
 		return pagedData;
 
 	}
 
 	@Override
 	public AccountDto saveAccount(AccountDto account) {
-		UserEntity user = UserEntity.builder().id(account.user.getId()).build();
-		AccountEntity accountEntity = AccountEntity.builder().id(account.getId()).user(user)
-				.accounType(account.getAccounType()).accountNumber(account.getAccountNumber())
-				.balance(account.getBalance()).build();
+
+		AccountEntity accountEntity = AccountEntity.builder().id(account.getId()).accounType(account.getAccounType())
+				.accountNumber(account.getAccountNumber()).balance(account.getBalance()).build();
 		accountEntity = accountRepository.save(accountEntity);
 		account.setId(accountEntity.getId());
 		return account;
 	}
 
 	@Override
-	public AccountDto getAccountById(String id) {
+	public AccountResponseDto getAccountById(String id) {
 		AccountEntity account = accountRepository.findById(id).get();
-		UserDto user = UserDto.builder().id(account.user.getId()).build();
-		return AccountDto.builder().id(account.getId()).user(user).accounType(account.getAccounType())
-				.accountNumber(account.getAccountNumber()).balance(account.getBalance()).build();
+		List<TransactionResponseDto> transactions = new ArrayList<>();
+		for (String transactionId : account.getTransactions()) {
+			TransactionResponseDto transaction = transactionService.getTransactionById(transactionId);
+			transactions.add(transaction);
+		}
+		return AccountResponseDto.builder().id(account.getId()).accounType(account.getAccounType())
+				.accountNumber(account.getAccountNumber()).transactions(transactions).balance(account.getBalance())
+				.build();
 	}
 
 	@Override
 	public AccountDto updateAccount(String id, AccountDto account) {
-		UserEntity user = UserEntity.builder().id(account.user.getId()).build();
-		AccountEntity accountEntity = AccountEntity.builder().id(id).user(user).accounType(account.getAccounType())
+		AccountEntity accountEntity = AccountEntity.builder().id(id).accounType(account.getAccounType())
 				.accountNumber(account.getAccountNumber()).balance(account.getBalance()).build();
 		accountEntity = accountRepository.save(accountEntity);
 		account.setId(accountEntity.getId());
@@ -73,38 +84,25 @@ public class AccountServiceImplementation implements AccountService {
 	@Override
 	public void deleteAccount(String id) {
 		accountRepository.deleteById(id);
-
 	}
 
 	@Override
-	public List<AccountDto> getAccountByUserId(String userId) {
-		List<AccountEntity> accountEntity = accountRepository.getByUserId(userId);
-		List<AccountDto> accountDtoList = new ArrayList<>();
-		for (AccountEntity account : accountEntity) {
-			UserDto user = UserDto.builder().id(account.getUser().getId()).build();
-			AccountDto accountDto = AccountDto.builder().id(account.getId()).user(user)
-					.accounType(account.getAccounType()).accountNumber(account.getAccountNumber())
-					.balance(account.getBalance()).build();
-
-			accountDtoList.add(accountDto);
-		}
-		return accountDtoList;
-	}
-
-	@Override
-	public Page<AccountDto> getByAccountType(AccounType accountType, int page, int size, String sortBy) {
+	public Page<AccountResponseDto> getByAccountType(AccountTypes accountType, int page, int size, String sortBy) {
 		Pageable pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
 		Page<AccountEntity> account = accountRepository.findByAccountType(accountType, pageRequest);
-		List<AccountDto> accountDtoList = new ArrayList<>();
+		List<AccountResponseDto> accountDtoList = new ArrayList<>();
 		for (AccountEntity a : account) {
-			UserDto user = UserDto.builder().id(a.user.getId()).build();
-			AccountDto accountDto = AccountDto.builder().id(a.getId()).user(user).accounType(a.getAccounType())
-					.accountNumber(a.getAccountNumber()).balance(a.getBalance()).build();
+			List<TransactionResponseDto> transactions = new ArrayList<>();
+			for (String id : a.getTransactions()) {
+				TransactionResponseDto transaction = transactionService.getTransactionById(id);
+				transactions.add(transaction);
+			}
+			AccountResponseDto accountDto = AccountResponseDto.builder().id(a.getId()).accounType(a.getAccounType())
+					.accountNumber(a.getAccountNumber()).transactions(transactions).balance(a.getBalance()).build();
 
 			accountDtoList.add(accountDto);
 		}
-		Page<AccountDto> pagedData = new PageImpl<>(accountDtoList);
+		Page<AccountResponseDto> pagedData = new PageImpl<>(accountDtoList);
 		return pagedData;
 	}
-
 }

@@ -11,4 +11,5 @@ import com.fuse.bankManagementSystem.entities.UserEntity;
 public interface UserRepository extends MongoRepository<UserEntity, String> {
 	@Query("{'gender':?0}")
 	public Page<UserEntity> findByGender(Gender gender, Pageable pageRequest);
+
 }

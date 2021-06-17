@@ -1,6 +1,7 @@
 package com.fuse.bankManagementSystem.entities;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,16 +18,17 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-@Document
+@Document("users")
 @Builder
 public class UserEntity {
 	@Id
-	public String id;
-	public String firstName;
-	public String middleName;
-	public String lastName;
-	public Gender gender;
-	public String address;
-	public BigInteger phoneNumber;
-	public String email;
+	private String id;
+	private String firstName;
+	private String middleName;
+	private String lastName;
+	private Gender gender;
+	private String address;
+	private BigInteger phoneNumber;
+	private String email;
+	private List<String> accounts;
 }

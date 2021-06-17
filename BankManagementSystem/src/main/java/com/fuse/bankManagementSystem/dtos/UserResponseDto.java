@@ -1,9 +1,9 @@
-package com.fuse.bankManagementSystem.entities;
+package com.fuse.bankManagementSystem.dtos;
 
 import java.math.BigInteger;
+import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.fuse.bankManagementSystem.entities.Gender;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,21 +14,19 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
-@Document("employees")
+@ToString
 @Builder
-public class EmployeeEntity {
-	@Id
+public class UserResponseDto {
 	private String id;
 	private String firstName;
 	private String middleName;
 	private String lastName;
-	private BigInteger phoneNumber;
+	private Gender gender;
 	private String address;
-	private Post post;
-	private double salary;
+	private BigInteger phoneNumber;
 	private String email;
+	private List<AccountResponseDto> accounts;
 
 }

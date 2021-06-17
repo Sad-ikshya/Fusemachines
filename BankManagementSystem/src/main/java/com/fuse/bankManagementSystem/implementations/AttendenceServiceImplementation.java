@@ -23,7 +23,7 @@ public class AttendenceServiceImplementation implements AttendenceService {
 		List<AttendenceEntity> attendence = attendenceRepository.findAll();
 		List<AttendenceDto> attendenceDtoList = new ArrayList<>();
 		for (AttendenceEntity a : attendence) {
-			EmployeeDto employee = EmployeeDto.builder().id(a.employee.getId()).build();
+			EmployeeDto employee = EmployeeDto.builder().id(a.getEmployee().getId()).build();
 			AttendenceDto attendenceDto = AttendenceDto.builder().id(a.getId()).employee(employee).date(a.getDate())
 					.isPresent(a.isPresent()).build();
 
@@ -35,7 +35,7 @@ public class AttendenceServiceImplementation implements AttendenceService {
 
 	@Override
 	public AttendenceDto saveAttendence(AttendenceDto attendence) {
-		EmployeeEntity employee = EmployeeEntity.builder().id(attendence.employee.getId()).build();
+		EmployeeEntity employee = EmployeeEntity.builder().id(attendence.getEmployee().getId()).build();
 		AttendenceEntity attendenceEntity = AttendenceEntity.builder().id(attendence.getId()).employee(employee)
 				.date(attendence.getDate()).isPresent(attendence.isPresent()).build();
 		attendenceEntity = attendenceRepository.save(attendenceEntity);
@@ -46,14 +46,14 @@ public class AttendenceServiceImplementation implements AttendenceService {
 	@Override
 	public AttendenceDto getAttendenceById(String id) {
 		AttendenceEntity attendence = attendenceRepository.findById(id).get();
-		EmployeeDto employee = EmployeeDto.builder().id(attendence.employee.getId()).build();
+		EmployeeDto employee = EmployeeDto.builder().id(attendence.getEmployee().getId()).build();
 		return AttendenceDto.builder().id(attendence.getId()).employee(employee).date(attendence.getDate())
 				.isPresent(attendence.isPresent()).build();
 	}
 
 	@Override
 	public AttendenceDto updateAttendence(String id, AttendenceDto attendence) {
-		EmployeeEntity employee = EmployeeEntity.builder().id(attendence.employee.getId()).build();
+		EmployeeEntity employee = EmployeeEntity.builder().id(attendence.getEmployee().getId()).build();
 		AttendenceEntity attendenceEntity = AttendenceEntity.builder().id(id).employee(employee)
 				.date(attendence.getDate()).isPresent(attendence.isPresent()).build();
 		attendenceEntity = attendenceRepository.save(attendenceEntity);
@@ -79,5 +79,4 @@ public class AttendenceServiceImplementation implements AttendenceService {
 		}
 		return attendenceDtoList;
 	}
-
 }

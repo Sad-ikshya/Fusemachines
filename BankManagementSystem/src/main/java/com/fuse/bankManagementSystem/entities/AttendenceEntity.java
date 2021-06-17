@@ -3,7 +3,6 @@ package com.fuse.bankManagementSystem.entities;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -18,14 +17,13 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-@Document
+@Document("attendences")
 @Builder
 public class AttendenceEntity {
 	@Id
-	public String id;
-	@DBRef
-	public EmployeeEntity employee;
-	public Date date;
-	public boolean isPresent;
+	private String id;
+	private EmployeeEntity employee;
+	private Date date;
+	private boolean isPresent;
 
 }

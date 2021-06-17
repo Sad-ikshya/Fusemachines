@@ -1,8 +1,6 @@
 package com.fuse.bankManagementSystem.dtos;
 
-import java.util.Date;
-
-import com.fuse.bankManagementSystem.entities.TransactionTypes;
+import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,14 +11,11 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
+@ToString
 @Builder
-public class TransactionDto {
-	public String id;
-	public Date date;
-	public double ammount;
-	public String receiptAccount;
-	public TransactionTypes transactionType;
+public class LoginResponse implements Serializable {
+	private static final long serialVersionUID = -8091879091924046844L;
+	private String jwttoken;
 }

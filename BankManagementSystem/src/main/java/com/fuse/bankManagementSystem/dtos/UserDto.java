@@ -1,6 +1,7 @@
 package com.fuse.bankManagementSystem.dtos;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import com.fuse.bankManagementSystem.entities.Gender;
 
@@ -18,13 +19,13 @@ import lombok.ToString;
 @ToString
 @Builder
 public class UserDto {
-	public String id;
-	public String firstName;
-	public String middleName;
-	public String lastName;
-	public Gender gender;
-	public String address;
-	public BigInteger phoneNumber;
-	public String email;
-
+	private String id;
+	private String firstName;
+	private String middleName;
+	private String lastName;
+	private Gender gender;
+	private String address;
+	private BigInteger phoneNumber;
+	private String email;
+	private List<String> accounts;
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fuse.bankManagementSystem.dtos.UserDto;
+import com.fuse.bankManagementSystem.dtos.UserResponseDto;
 import com.fuse.bankManagementSystem.entities.Gender;
 import com.fuse.bankManagementSystem.exceptionHandling.UserNotFoundException;
 import com.fuse.bankManagementSystem.services.UserService;
@@ -32,16 +33,16 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> getAllUser(@RequestParam(defaultValue = "") String gender,
 			@RequestParam(defaultValue = "id") String sortBy, @RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "3") Integer size) throws UserNotFoundException {
-		Response<UserDto> response = new Response<UserDto>();
+		Response<UserResponseDto> response = new Response<UserResponseDto>();
 		if (!gender.isEmpty()) {
-			Page<UserDto> data = userService.findByGender(Gender.valueOf(gender), page, size, sortBy);
+			Page<UserResponseDto> data = userService.findByGender(Gender.valueOf(gender), page, size, sortBy);
 			if (data.isEmpty()) {
 				throw new UserNotFoundException();
 			}
 			return response.getPageResponseEntity(data, HttpStatus.OK);
 		}
 
-		Page<UserDto> data = userService.getAllUser(page, size, sortBy);
+		Page<UserResponseDto> data = userService.getAllUser(page, size, sortBy);
 
 		return response.getPageResponseEntity(data, HttpStatus.OK);
 
@@ -53,8 +54,8 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDto> getUserById(@PathVariable String id) {
-		return new ResponseEntity<UserDto>(userService.getUserById(id), HttpStatus.FOUND);
+	public ResponseEntity<UserResponseDto> getUserById(@PathVariable String id) {
+		return new ResponseEntity<UserResponseDto>(userService.getUserById(id), HttpStatus.FOUND);
 	}
 
 	@PutMapping("/{id}")

@@ -18,10 +18,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @Builder
-public class AccountDto {
+public class AccountResponseDto {
 	public String id;
 	public double balance;
 	public AccountTypes accounType;
 	public BigInteger accountNumber;
-	public List<String> transactions;
+	public List<TransactionResponseDto> transactions;
 }

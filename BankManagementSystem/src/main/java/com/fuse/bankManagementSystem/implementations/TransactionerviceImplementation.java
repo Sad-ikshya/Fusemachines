@@ -11,9 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.fuse.bankManagementSystem.dtos.AccountDto;
+import com.fuse.bankManagementSystem.dtos.AccountResponseDto;
 import com.fuse.bankManagementSystem.dtos.TransactionDto;
-import com.fuse.bankManagementSystem.entities.AccountEntity;
+import com.fuse.bankManagementSystem.dtos.TransactionResponseDto;
 import com.fuse.bankManagementSystem.entities.TransactionEntity;
 import com.fuse.bankManagementSystem.repositories.AccountRepository;
 import com.fuse.bankManagementSystem.repositories.TransactionRepository;
@@ -28,37 +28,35 @@ public class TransactionerviceImplementation implements TransactionService {
 	AccountService accountService;
 
 	@Override
-	public Page<TransactionDto> getAllTransaction(int page, int size, String sortBy) {
+	public Page<TransactionResponseDto> getAllTransaction(int page, int size, String sortBy) {
 		Pageable pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
 		Page<TransactionEntity> transaction = transactionRepository.findAll(pageRequest);
-		List<TransactionDto> transactionDtoList = new ArrayList<>();
+		List<TransactionResponseDto> transactionDtoList = new ArrayList<>();
 		for (TransactionEntity t : transaction) {
-			AccountDto account = AccountDto.builder().id(t.toAccount.getId()).build();
-			TransactionDto transactionDto = TransactionDto.builder().id(t.getId()).date(t.getDate())
-					.ammount(t.getAmmount()).toAccount(account).fromAccount(t.getFromAccount()).build();
+			AccountResponseDto account = accountService.getAccountById(t.getReceiptAccount());
+			TransactionResponseDto transactionDto = TransactionResponseDto.builder().id(t.getId()).date(t.getDate())
+					.ammount(t.getAmmount()).transactionType(t.getTransactionType()).receiptAccount(account).build();
 
 			transactionDtoList.add(transactionDto);
 		}
-		Page<TransactionDto> pagefiedData = new PageImpl<>(transactionDtoList);
+		Page<TransactionResponseDto> pagefiedData = new PageImpl<>(transactionDtoList);
 		return pagefiedData;
 	}
 
 	@Override
-	public TransactionDto getTransactionById(String id) {
+	public TransactionResponseDto getTransactionById(String id) {
 		TransactionEntity transaction = transactionRepository.findById(id).get();
-		AccountDto account = AccountDto.builder().id(transaction.toAccount.getId()).build();
-		return TransactionDto.builder().id(transaction.getId()).date(transaction.getDate())
-				.ammount(transaction.getAmmount()).toAccount(account).fromAccount(transaction.getFromAccount()).build();
+
+		return TransactionResponseDto.builder().id(transaction.getId()).date(transaction.getDate())
+				.ammount(transaction.getAmmount()).transactionType(transaction.getTransactionType()).build();
 	}
 
 	@Override
 	public TransactionDto saveTransaction(TransactionDto transaction) {
-
-		AccountEntity account = AccountEntity.builder().id(transaction.getToAccount().getId()).build();
-
 		TransactionEntity transactionEntity = TransactionEntity.builder().id(transaction.getId())
-				.date(transaction.getDate()).ammount(transaction.getAmmount()).toAccount(account)
-				.fromAccount(transaction.getFromAccount()).build();
+				.date(transaction.getDate()).ammount(transaction.getAmmount())
+				.receiptAccount(transaction.getReceiptAccount()).transactionType(transaction.getTransactionType())
+				.build();
 
 		transactionEntity = transactionRepository.save(transactionEntity);
 		transaction.setId(transactionEntity.getId());
@@ -69,12 +67,13 @@ public class TransactionerviceImplementation implements TransactionService {
 
 	@Override
 	public TransactionDto updateTransaction(String id, TransactionDto transaction) {
-		AccountEntity account = AccountEntity.builder().id(transaction.toAccount.getId()).build();
 		TransactionEntity transactionEntity = TransactionEntity.builder().id(id).date(transaction.getDate())
-				.ammount(transaction.getAmmount()).toAccount(account).fromAccount(transaction.getFromAccount()).build();
+				.ammount(transaction.getAmmount()).receiptAccount(transaction.getReceiptAccount())
+				.transactionType(transaction.getTransactionType()).build();
 
 		transactionEntity = transactionRepository.save(transactionEntity);
 		transaction.setId(transactionEntity.getId());
+
 		return transaction;
 	}
 
@@ -85,20 +84,6 @@ public class TransactionerviceImplementation implements TransactionService {
 	}
 
 	@Override
-	public List<TransactionDto> getTransactionByAccountId(String accountId) {
-		List<TransactionEntity> transaction = transactionRepository.getByToAccountId(accountId);
-		List<TransactionDto> transactionDtoList = new ArrayList<>();
-		for (TransactionEntity t : transaction) {
-			AccountDto account = AccountDto.builder().id(t.getToAccount().getId()).build();
-			TransactionDto transactionDto = TransactionDto.builder().id(t.getId()).date(t.getDate())
-					.ammount(t.getAmmount()).toAccount(account).fromAccount(t.getFromAccount()).build();
-
-			transactionDtoList.add(transactionDto);
-		}
-		return transactionDtoList;
-	}
-
-	@Override
 	public Page<TransactionDto> getTransactionByAmmount(double ammountGT, double ammountLt, int page, int size,
 			String sortBy) {
 		Pageable pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
@@ -106,9 +91,10 @@ public class TransactionerviceImplementation implements TransactionService {
 
 		List<TransactionDto> transactionDtoList = new ArrayList<>();
 		for (TransactionEntity t : transaction) {
-			AccountDto account = AccountDto.builder().id(t.toAccount.getId()).build();
+
 			TransactionDto transactionDto = TransactionDto.builder().id(t.getId()).date(t.getDate())
-					.ammount(t.getAmmount()).toAccount(account).fromAccount(t.getFromAccount()).build();
+					.ammount(t.getAmmount()).transactionType(t.getTransactionType())
+					.receiptAccount(t.getReceiptAccount()).build();
 
 			transactionDtoList.add(transactionDto);
 		}
