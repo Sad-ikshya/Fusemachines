@@ -20,7 +20,6 @@ import com.fuse.bankManagementSystem.dtos.AccountDto;
 import com.fuse.bankManagementSystem.dtos.AccountResponseDto;
 import com.fuse.bankManagementSystem.entities.AccountTypes;
 import com.fuse.bankManagementSystem.services.AccountService;
-import com.fuse.bankManagementSystem.services.UserService;
 import com.fuse.bankManagementSystem.utility.Response;
 
 @RestController
@@ -28,7 +27,6 @@ import com.fuse.bankManagementSystem.utility.Response;
 public class AccountController {
 	@Autowired
 	private AccountService accountService;
-	private UserService userService;
 
 	@GetMapping("/")
 	public ResponseEntity<Map<String, Object>> getAllAccount(@RequestParam(defaultValue = "") String accountType,
