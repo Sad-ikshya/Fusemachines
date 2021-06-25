@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+<head th:replace="fragments :: html_head(pageTitle='Login')" />
+<title>Demo</title>
+</head>
+<body>
+<h1>Welocome to phonebook</h1>
+<form th:action="@{/login} method="post">
+<input name="email"/>
+<input name="password"/>
+<input type="submit" value="Login"/>
+</form>
+<a th:href="@{/oauth2/authorization/google}">login with google</a>
+</body>
+</html>

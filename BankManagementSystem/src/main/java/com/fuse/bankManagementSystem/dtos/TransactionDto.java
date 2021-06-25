@@ -1,7 +1,8 @@
 package com.fuse.bankManagementSystem.dtos;
 
-import java.math.BigInteger;
 import java.util.Date;
+
+import com.fuse.bankManagementSystem.entities.TransactionTypes;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,6 @@ public class TransactionDto {
 	public String id;
 	public Date date;
 	public double ammount;
-	public BigInteger fromAccount;
-	public AccountDto toAccount;
-
+	public String receiptAccount;
+	public TransactionTypes transactionType;
 }

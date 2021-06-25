@@ -1,6 +1,5 @@
 package com.fuse.bankManagementSystem.controllers;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fuse.bankManagementSystem.dtos.AccountDto;
-import com.fuse.bankManagementSystem.entities.AccounType;
+import com.fuse.bankManagementSystem.dtos.AccountResponseDto;
+import com.fuse.bankManagementSystem.entities.AccountTypes;
 import com.fuse.bankManagementSystem.services.AccountService;
 import com.fuse.bankManagementSystem.utility.Response;
 
@@ -32,10 +32,10 @@ public class AccountController {
 	public ResponseEntity<Map<String, Object>> getAllAccount(@RequestParam(defaultValue = "") String accountType,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "3") int size,
 			@RequestParam(defaultValue = "id") String sortBy) {
-		Response<AccountDto> response = new Response<AccountDto>();
+		Response<AccountResponseDto> response = new Response<AccountResponseDto>();
 		if (!accountType.isEmpty()) {
-			Page<AccountDto> pagedData = accountService.getByAccountType(AccounType.valueOf(accountType), page, size,
-					sortBy);
+			Page<AccountResponseDto> pagedData = accountService.getByAccountType(AccountTypes.valueOf(accountType),
+					page, size, sortBy);
 			return response.getPageResponseEntity(pagedData, HttpStatus.OK);
 
 		}
@@ -44,12 +44,17 @@ public class AccountController {
 
 	@PostMapping("/")
 	public ResponseEntity<AccountDto> saveAccount(@RequestBody AccountDto account) {
+		// UserDto user = userService.getUserById(account.getUser().getId());
+		// if (user.id.isEmpty()) {
+		// throw new UserNotFoundException();
+		// } else {
 		return new ResponseEntity<AccountDto>(accountService.saveAccount(account), HttpStatus.CREATED);
+
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<AccountDto> getAccountById(@PathVariable String id) {
-		return new ResponseEntity<AccountDto>(accountService.getAccountById(id), HttpStatus.FOUND);
+	public ResponseEntity<AccountResponseDto> getAccountById(@PathVariable String id) {
+		return new ResponseEntity<AccountResponseDto>(accountService.getAccountById(id), HttpStatus.FOUND);
 	}
 
 	@PutMapping("/{id}")
@@ -62,10 +67,4 @@ public class AccountController {
 		accountService.deleteAccount(id);
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 	}
-
-	@GetMapping("/getUserById/{userId}")
-	public ResponseEntity<List<AccountDto>> getAccountByUserId(@PathVariable String userId) {
-		return new ResponseEntity<List<AccountDto>>(accountService.getAccountByUserId(userId), HttpStatus.OK);
-	}
-
 }

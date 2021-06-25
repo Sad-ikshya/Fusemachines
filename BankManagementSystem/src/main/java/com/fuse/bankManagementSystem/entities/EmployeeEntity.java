@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-@Document
+@Document("employees")
 @Builder
 public class EmployeeEntity {
 	@Id

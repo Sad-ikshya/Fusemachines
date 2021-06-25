@@ -1,6 +1,6 @@
 package com.fuse.bankManagementSystem.entities;
 
-public enum AccounType {
+public enum AccountTypes {
 	FIXED, CURRENT, SAVING
 
 }

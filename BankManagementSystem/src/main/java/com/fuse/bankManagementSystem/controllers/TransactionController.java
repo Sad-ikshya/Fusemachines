@@ -1,6 +1,5 @@
 package com.fuse.bankManagementSystem.controllers;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fuse.bankManagementSystem.dtos.TransactionDto;
+import com.fuse.bankManagementSystem.dtos.TransactionResponseDto;
 import com.fuse.bankManagementSystem.services.AccountService;
 import com.fuse.bankManagementSystem.services.TransactionService;
 import com.fuse.bankManagementSystem.utility.Response;
@@ -53,8 +53,8 @@ public class TransactionController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<TransactionDto> getTransactionById(@PathVariable String id) {
-		return new ResponseEntity<TransactionDto>(transactionService.getTransactionById(id), HttpStatus.FOUND);
+	public ResponseEntity<TransactionResponseDto> getTransactionById(@PathVariable String id) {
+		return new ResponseEntity<TransactionResponseDto>(transactionService.getTransactionById(id), HttpStatus.FOUND);
 	}
 
 	@PutMapping("/{id}")
@@ -67,11 +67,5 @@ public class TransactionController {
 	public ResponseEntity<HttpStatus> deleteTransaction(@PathVariable String id) {
 		transactionService.deleteTransaction(id);
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
-	}
-
-	@GetMapping("/getByAccountId/{accountId}")
-	public ResponseEntity<List<TransactionDto>> getTransactionByAccountId(@PathVariable String accountId) {
-		return new ResponseEntity<List<TransactionDto>>(transactionService.getTransactionByAccountId(accountId),
-				HttpStatus.OK);
 	}
 }
